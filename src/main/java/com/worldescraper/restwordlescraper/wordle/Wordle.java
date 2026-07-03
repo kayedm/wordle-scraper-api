@@ -6,6 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 
 /**
  * Data model for the wordle answer.
@@ -20,6 +21,7 @@ public class Wordle {
     private int number;
 
     @Column(name = "word")
+    @Size(min = 5 , max = 5, message = "Wordle answer must be 5 letters")
     private String answer;
 
     private LocalDate date;
