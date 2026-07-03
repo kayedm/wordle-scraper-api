@@ -24,7 +24,7 @@ public class WordleService {
         return repository.findById(id).orElseThrow(() -> new RuntimeException("Worlde not found"));
     }
 
-    Wordle addNewWordle(@RequestBody Wordle wordle) {
+    Wordle addNewWordle(Wordle wordle) {
         return repository.save(wordle);
     }
 
