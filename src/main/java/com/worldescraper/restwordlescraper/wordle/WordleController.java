@@ -1,5 +1,7 @@
 package com.worldescraper.restwordlescraper.wordle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -8,9 +10,9 @@ import java.util.List;
 @RequestMapping("/wordles")
 public class WordleController {
 
-    private final WordleService service;
+    private final WordleServiceImpl service;
 
-    WordleController(WordleService service) {
+    WordleController(WordleServiceImpl service) {
         this.service = service;
 
     }
