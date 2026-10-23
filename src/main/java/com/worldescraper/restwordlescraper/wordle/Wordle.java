@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
+import org.hibernate.annotations.DynamicUpdate;
 
 /**
  * Data model for the wordle answer.
@@ -18,7 +19,7 @@ import jakarta.validation.constraints.Size;
 public class Wordle {
 
     @Id
-    private int number;
+    private Integer number;
 
     @Column(name = "word")
     @Size(min = 5 , max = 5, message = "Wordle answer must be 5 letters")
