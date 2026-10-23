@@ -1,33 +1,17 @@
 package com.worldescraper.restwordlescraper.wordle;
 
-import com.worldescraper.restwordlescraper.scraper.Scraper;
-import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 import java.util.List;
 
-@Service
-public class WordleService {
+public interface WordleService {
 
-    private final WordleRepository repository;
+    // Method to return all wordles
+    List<Wordle> getAllWordles();
 
-    WordleService(WordleRepository repository) {
-        this.repository = repository;
-    }
+    // Method to get wordle by id
+    Wordle getById(int id);
 
-    List<Wordle> getAllWordles() {
-        return repository.findAll();
-    }
-
-    Wordle getById(int id) {
-        return repository.findById(id).orElseThrow(() -> new RuntimeException("Worlde not found"));
-    }
-
-    void scrapeData() throws IOException {
-        Scraper scraper = new Scraper();
-        scraper.fetchHtml();
-        scraper.parseText();
-        repository.saveAll(scraper.returnList());
-    }
+    // Method to create a list of wordles
+    void scrapeData() throws IOException;
 
 }
