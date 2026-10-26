@@ -5,6 +5,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -13,9 +14,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * This class fetches a html document and stores it as a file.
@@ -28,10 +27,13 @@ public class Scraper {
     private List<String> cells = new ArrayList<>();
 
     /**
-     * Fetches the html doc from the url if it doesn't already exist on the file system.
+     * Fetches the html doc from a url and appends the current date.
+     * If the current date doesn't match the html doc is re-fetched.
+     * This is because wordle updates once a day so we update on new day.
      * @throws IOException If the document cannot be downloaded or written to the disk
      */
     public void fetchHtml() throws IOException {
+        String date = LocalDate.now().toString();
         if (!Files.exists(Paths.get("doc.html"))) {
 
             Document doc = Jsoup.connect(wordleUrl)
@@ -39,10 +41,30 @@ public class Scraper {
                     .get();
 
             try (FileWriter fw = new FileWriter("doc.html")) {
-                fw.write(doc.html());
+                fw.write(doc.html() + System.getProperty("line.separator"));
+                fw.write(date);
+            }
+        } else {
+            try(BufferedReader br = Files.newBufferedReader(Paths.get("doc.html")) ) {
+                Queue<String> queue = new LinkedList<>();
+                String line;
+                while((line = br.readLine()) != null) {
+                    if(queue.size() >= 1) {
+                        queue.remove();
+                    }
+                    queue.add(line);
+                }
+
+                if(!queue.contains(date)) {
+                    Files.deleteIfExists(Paths.get("doc.html"));
+                    fetchHtml();
+                }
             }
         }
+
     }
+
+
 
     /**
      * Reads the html file and extracts the table cells that store the wordle answers and creates a list out of the
